@@ -1,14 +1,26 @@
 {
   "name": "android-design-audit",
-  "owner": { "name": "Kareem" },
-  "metadata": { "description": "Design-system, performance and hygiene checks for Android / Jetpack Compose" },
+  "owner": {
+    "name": "Kareem"
+  },
+  "metadata": {
+    "description": "Design-system, performance and hygiene checks for Android / Jetpack Compose"
+  },
   "plugins": [
     {
       "name": "android-design-audit",
       "source": "./",
       "description": "Review changed Compose code while developing, or audit a whole project / running screen. Errors and Warnings with the exact fix.",
-      "version": "0.4.0",
-      "keywords": ["android", "jetpack-compose", "material-design", "design-system", "code-review", "performance", "rtl"]
+      "version": "0.5.0",
+      "keywords": [
+        "android",
+        "jetpack-compose",
+        "material-design",
+        "design-system",
+        "code-review",
+        "performance",
+        "rtl"
+      ]
     }
   ]
 }

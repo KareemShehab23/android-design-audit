@@ -1,6 +1,6 @@
 {
   "name": "android-design-audit",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Android / Jetpack Compose design-system, performance and hygiene checks with two tasks: REVIEW changed code while developing (git diff or named files) and AUDIT an existing project or a running screen via adb. Errors and Warnings only, each with the exact Compose API to fix it. Covers Material 3 spacing tokens, 48dp touch targets, native components, typography/fonts, theme/dark mode, edge-to-edge, RTL, adaptive layouts, states, accessibility, recomposition & frame performance, unused code/imports/resources, duplicate strings/images.",
   "author": {
     "name": "Kareem"

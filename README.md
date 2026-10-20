@@ -31,4 +31,8 @@ Then `/android-design-audit review` (changed files) or `/android-design-audit au
 
 **CI** — copy `.github/workflows/design-audit.yml` into your app repo; every PR gets a design review in the job summary and fails on errors.
 
+**Git pre-commit hook (automatic while developing)** — `skills/android-design-audit/scripts/install-hook.sh /path/to/your/app`; every commit reviews the staged files, errors block the commit.
+
+**Android Studio plugin (as you type)** — build from the `android-design-audit-idea` project; violations are underlined in the editor and listed in Problems.
+
 **Terminal only** — `java -jar skills/android-design-audit/bin/audit-core.jar review . --git`
