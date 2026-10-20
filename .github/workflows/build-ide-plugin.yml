@@ -27,7 +27,9 @@ jobs:
           zip -r dist/android-design-audit.plugin .claude-plugin README.md skills -x "*__pycache__*" -x "*.DS_Store"
           ls -la dist
       - uses: actions/upload-artifact@v4
-        with: { name: android-design-audit-${{ github.sha }}, path: dist/* }
+        with:
+          name: android-design-audit-build
+          path: dist/*
       - name: Publish release assets
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
