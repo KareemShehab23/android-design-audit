@@ -1,0 +1,27 @@
+name: Android Design Audit
+# Reviews the files changed in a pull request against the design-system rules.
+# Copy this file into your Android app repo (.github/workflows/) and set AUDIT_REPO to your fork of the skill.
+on:
+  pull_request:
+    paths: ["**/*.kt", "**/res/**", "**/AndroidManifest.xml"]
+env:
+  AUDIT_REPO: KareemShehab23/android-design-audit
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - name: Get the audit engine
+        run: |
+          git clone --depth 1 https://github.com/${AUDIT_REPO}.git /tmp/ada
+          cp /tmp/ada/skills/android-design-audit/bin/audit-core.jar /tmp/audit-core.jar
+      - name: Review changed files
+        run: |
+          java -jar /tmp/audit-core.jar review . --git --base origin/${{ github.base_ref }} --report design-audit.md || echo "AUDIT_FAILED=1" >> $GITHUB_ENV
+          cat design-audit.md >> $GITHUB_STEP_SUMMARY
+      - name: Fail on errors
+        if: env.AUDIT_FAILED == '1'
+        run: echo "::error::Design audit found errors — see the job summary" && exit 1
