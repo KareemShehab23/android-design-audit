@@ -28,11 +28,13 @@ fi
 # ---- 2. Get the plugin zip ----------------------------------------------------------------
 TMP=$(mktemp -d)
 if [[ -z "$ZIP" ]]; then
-  if [[ "$VERSION" == "latest" ]]; then API="https://api.github.com/repos/$REPO/releases/latest"; else API="https://api.github.com/repos/$REPO/releases/tags/$VERSION"; fi
-  URL=$(curl -fsSL "$API" | grep -oE '"browser_download_url": *"[^"]*android-design-audit-ide\.zip"' | head -1 | sed -E 's/.*"(https[^"]*)"/\1/')
-  if [[ -z "$URL" ]]; then
-    # fall back to the rolling pre-release built from main
-    URL=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/tags/latest" | grep -oE '"browser_download_url": *"[^"]*android-design-audit-ide\.zip"' | head -1 | sed -E 's/.*"(https[^"]*)"/\1/')
+  asset_url() { { curl -sSL "$1" 2>/dev/null || true; } | { grep -oE '"browser_download_url": *"[^"]*android-design-audit-ide\.zip"' || true; } | head -1 | sed -E 's/.*"(https[^"]*)"/\1/'; }
+  URL=""
+  if [[ "$VERSION" == "latest" ]]; then
+    URL=$(asset_url "https://api.github.com/repos/$REPO/releases/latest")          # newest versioned release (404 if none yet)
+    [[ -z "$URL" ]] && URL=$(asset_url "https://api.github.com/repos/$REPO/releases/tags/latest")   # rolling build from main
+  else
+    URL=$(asset_url "https://api.github.com/repos/$REPO/releases/tags/$VERSION")
   fi
   [[ -z "$URL" ]] && { echo "Could not find android-design-audit-ide.zip in GitHub Releases of $REPO." >&2; exit 4; }
   echo "Downloading $URL"
