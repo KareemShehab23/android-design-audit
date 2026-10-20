@@ -1,0 +1,87 @@
+<idea-plugin>
+    <id>com.kareem.designaudit</id>
+    <name>Android Design Audit</name>
+    <vendor>Kareem</vendor>
+    <description><![CDATA[
+        Audits Android (Jetpack Compose) apps against Material Design 3 fundamentals, from inside the IDE.<br/><br/>
+        <b>Capture screen</b> — turns on <i>Show layout bounds</i> via adb, takes screenshots, dumps the view hierarchy and
+        measures spacing, screen margins, alignment and 48dp touch targets in real dp. Findings are drawn on an annotated
+        screenshot whose numbers match the table.<br/>
+        <b>Live in the editor</b> — violations are underlined as you type (errors red, warnings yellow) with the fix on hover,
+        and listed in the Problems view; toggle in Settings.<br/>
+        <b>Measure performance</b> — janky-frame %, 90/95/99th-percentile frame times, slow UI thread and memory from
+        <code>dumpsys gfxinfo</code>, plus Compose performance anti-patterns in code (state in modifiers, missing lazy keys,
+        mutableStateOf without remember, allocations in composition…).<br/>
+        <b>Scan code</b> — 4/8dp grid, sp vs dp, hardcoded colors and strings, RTL-unsafe APIs, AutoMirrored icons,
+        Material 2/3 mixing, dark theme, edge-to-edge, predictive back, adaptive layouts, accessibility and more.<br/>
+        <b>Understand &amp; fix</b> — each finding explains why it matters and names the Compose API to use;
+        double-click jumps to the line or spotlights the element on the screenshot. Export a shareable HTML report.<br/><br/>
+        Open the <b>Design Audit</b> tool window (bottom) or <b>Tools → Android Design Audit</b>.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Design Audit"
+                    anchor="bottom"
+                    icon="/icons/designAudit.svg"
+                    factoryClass="com.kareem.designaudit.ui.AuditToolWindowFactory"/>
+        <notificationGroup id="Android Design Audit" displayType="BALLOON"/>
+        <externalAnnotator language="kotlin" implementationClass="com.kareem.designaudit.ui.LiveAnnotator"/>
+    </extensions>
+
+    <actions>
+        <action id="DesignAudit.Capture" class="com.kareem.designaudit.actions.CaptureScreenAction" text="Capture Screen from Device"
+                description="Enable Show layout bounds, capture the current screen and measure spacing and touch targets">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift A"/>
+        </action>
+        <action id="DesignAudit.ScanCode" class="com.kareem.designaudit.actions.ScanCodeAction" text="Scan Compose Code"
+                description="Statically check Compose code against Material 3 design basics">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift S"/>
+        </action>
+        <action id="DesignAudit.AuditAll" class="com.kareem.designaudit.actions.AuditAllAction" text="Capture + Scan"/>
+        <action id="DesignAudit.MeasurePerf" class="com.kareem.designaudit.actions.MeasurePerfAction" text="Measure Performance (10s)">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P"/>
+        </action>
+        <action id="DesignAudit.Refresh" class="com.kareem.designaudit.actions.RefreshDevicesAction" text="Refresh Devices"/>
+        <action id="DesignAudit.OpenAnnotated" class="com.kareem.designaudit.actions.OpenAnnotatedAction" text="Open Annotated Screenshot"/>
+        <action id="DesignAudit.OpenReport" class="com.kareem.designaudit.actions.OpenReportAction" text="Open Markdown Report"/>
+        <action id="DesignAudit.OpenHtml" class="com.kareem.designaudit.actions.OpenHtmlReportAction" text="Open HTML Report in Browser"/>
+        <action id="DesignAudit.ExportMd" class="com.kareem.designaudit.actions.ExportMarkdownAction" text="Export Markdown...">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift E"/>
+        </action>
+        <action id="DesignAudit.Clear" class="com.kareem.designaudit.actions.ClearAction" text="Clear Results"/>
+        <action id="DesignAudit.Settings" class="com.kareem.designaudit.actions.SettingsAction" text="Audit Settings..."/>
+
+        <!-- Tools menu -->
+        <group id="DesignAudit.Menu" text="Android Design Audit" popup="true" icon="/icons/designAudit.svg">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <reference ref="DesignAudit.Capture"/>
+            <reference ref="DesignAudit.ScanCode"/>
+            <reference ref="DesignAudit.AuditAll"/>
+            <reference ref="DesignAudit.MeasurePerf"/>
+            <separator/>
+            <reference ref="DesignAudit.OpenAnnotated"/>
+            <reference ref="DesignAudit.OpenReport"/>
+            <reference ref="DesignAudit.OpenHtml"/>
+            <reference ref="DesignAudit.ExportMd"/>
+            <separator/>
+            <reference ref="DesignAudit.Settings"/>
+        </group>
+
+        <!-- Tool window toolbar -->
+        <group id="DesignAudit.Toolbar">
+            <reference ref="DesignAudit.AuditAll"/>
+            <reference ref="DesignAudit.MeasurePerf"/>
+            <reference ref="DesignAudit.Refresh"/>
+            <separator/>
+            <reference ref="DesignAudit.OpenAnnotated"/>
+            <reference ref="DesignAudit.OpenReport"/>
+            <reference ref="DesignAudit.OpenHtml"/>
+            <reference ref="DesignAudit.ExportMd"/>
+            <separator/>
+            <reference ref="DesignAudit.Clear"/>
+            <reference ref="DesignAudit.Settings"/>
+        </group>
+    </actions>
+</idea-plugin>

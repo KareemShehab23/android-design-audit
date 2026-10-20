@@ -26,6 +26,21 @@ If a developer says "I violated a rule and got no warning", first ask which of t
 then: for the IDE → is the plugin installed and *Highlight violations in the editor* on in Settings? For
 commits → run `install-hook.sh`. For Claude → run Task 1 now on their changed files and show the output.
 
+### First use: offer the IDE plugin and the commit hook (one-time, with consent)
+
+The first time this skill runs for a developer, check whether the Android Studio plugin is installed:
+```bash
+$S/install-ide-plugin.sh --list        # "<AndroidStudioVersion>: installed 0.5.0" or "not installed"
+```
+If it is not installed, say in one line what it does (underlines violations as you type, Design Audit tool
+window) and ask whether to install it. On yes:
+```bash
+$S/install-ide-plugin.sh               # downloads the latest build from GitHub Releases into every Android Studio found
+```
+then tell them to restart Android Studio. Do the same for the commit hook (`$S/install-hook.sh <project-root>`)
+when the project is a git repo. Never install either without asking — it changes the developer's IDE and git
+behaviour. If the machine has no Android Studio (QA, designer, CI), skip this silently.
+
 ## Task 1 — REVIEW: while the developer is developing
 
 Trigger: the developer just wrote/changed Compose code, asks "is this ok?", "check my screen", "review before I commit", or the conversation contains a diff / new composable.
@@ -78,6 +93,6 @@ Open `audit-captures/home/annotated.png` and `screen_bounds.png` with Read and l
 ## Files
 
 - `bin/audit-core.jar` — the rule engine (same code as the Android Studio plugin)
-- `scripts/audit.sh` — wrapper that finds Java; `scripts/capture.sh` — adb capture; `scripts/install-hook.sh` — git pre-commit gate
+- `scripts/audit.sh` — wrapper that finds Java; `scripts/capture.sh` — adb capture; `scripts/install-hook.sh` — git pre-commit gate; `scripts/install-ide-plugin.sh` — installs/updates the Android Studio plugin from GitHub Releases
 - `references/rules.md` — every rule with severity, check, fix, and the manual checklist rows
 - `$S/audit.sh rules` — prints the rule ids by area
